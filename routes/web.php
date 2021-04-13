@@ -18,4 +18,4 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::resource('/contacts', 'ContactController')->middleware('web');
+Route::resource('/contacts', 'ContactController')->only(['index', 'store', 'update', 'destroy'])->middleware('web');

@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -19,8 +21,12 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = auth()->user()->contacts;
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(['error' => 'veillez vous connecté SVP.'], 401);
+        }
         
+        $contacts = $auth->contacts;
         // Faire le trie pour une récuperation normal
         $contacts = $contacts->sortBy('last_name')->values();
         
@@ -45,7 +51,21 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        /** @var User */
+        $auth = auth()->user();
+
+        $request->validate([
+            'first_name' => 'required|string|min:2',
+            'last_name' => 'required|string|min:2',
+            'email' => 'required|string|email|unique:contacts,eamail' . $auth->id,
+            'phone' => 'required|string',
+            'address' => 'string',
+        ]);
+
+        /** @var Contact */
+        $contact = $auth->contacts()->create($request->all());
+        return response()->json($contact->getAttributes(), 200);
     }
 
     /**
@@ -79,7 +99,20 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        /** @var User */
+        $auth = auth()->user();
+
+        $request->validate([
+            'first_name' => 'required|string|min:2',
+            'last_name' => 'required|string|min:2',
+            'email' => 'required|string|email|unique:contacts,email' . $auth->id,
+            'phone' => 'required|string',
+            'address' => 'string',
+        ]);
+        
+        $contact = Contact::findOrFail($id);
+        $contact->update($request->all());
+        return response()->json($contact->getAttributes(), 200);
     }
 
     /**
@@ -90,6 +123,9 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $contact = Contact::findOrFail($id);
+        $contact->delete();
+
+        return response()->json($contact->getAttributes(), 200);
     }
 }
