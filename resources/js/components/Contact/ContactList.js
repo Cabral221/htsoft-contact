@@ -27,25 +27,21 @@ class ContactList extends Component {
 
     render() {
         const rows = this.state.contacts
-        return (
-            <div className="card">
-                <div className="card-header">Liste des contact </div>
-                <div className="card-body">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Nom (email)</th>
-                                <th>Téléphone</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        );
+        return (<div className="bg-white p-3">
+            <h2>Liste des contact ({this.props.contacts.length})</h2>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Nom (email)</th>
+                        <th>Téléphone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
+        </div>);
     }
 }
 

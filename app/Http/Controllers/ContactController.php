@@ -51,6 +51,7 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
 
         /** @var User */
         $auth = auth()->user();
@@ -58,7 +59,7 @@ class ContactController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:2',
             'last_name' => 'required|string|min:2',
-            'email' => 'required|string|email|unique:contacts,eamail' . $auth->id,
+            'email' => 'required|string|email|unique:contacts,email,' . $auth->id,
             'phone' => 'required|string',
             'address' => 'string',
         ]);

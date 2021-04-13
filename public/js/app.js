@@ -65933,7 +65933,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Contact_ContactList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Contact/ContactList */ "./resources/js/components/Contact/ContactList.js");
+/* harmony import */ var _Contact_ContactForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Contact/ContactForm */ "./resources/js/components/Contact/ContactForm.js");
+/* harmony import */ var _Contact_ContactList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Contact/ContactList */ "./resources/js/components/Contact/ContactList.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65960,6 +65961,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var App = /*#__PURE__*/function (_Component) {
   _inherits(App, _Component);
 
@@ -65972,32 +65974,124 @@ var App = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      success: false,
       contacts: [],
-      error: [],
+      errors: [],
       loading: false
     };
+    _this.handleFirstNameChange = _this.handleFirstNameChange.bind(_assertThisInitialized(_this));
+    _this.handleLastNameChange = _this.handleLastNameChange.bind(_assertThisInitialized(_this));
+    _this.handleEmailChange = _this.handleEmailChange.bind(_assertThisInitialized(_this));
+    _this.handlePhoneChange = _this.handlePhoneChange.bind(_assertThisInitialized(_this));
+    _this.handleAddressChange = _this.handleAddressChange.bind(_assertThisInitialized(_this));
+    _this.handleStoreContact = _this.handleStoreContact.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.getContact();
+    }
+  }, {
+    key: "handleFirstNameChange",
+    value: function handleFirstNameChange(firstName) {
+      this.setState({
+        firstName: firstName
+      });
+    }
+  }, {
+    key: "handleLastNameChange",
+    value: function handleLastNameChange(lastName) {
+      this.setState({
+        lastName: lastName
+      });
+    }
+  }, {
+    key: "handleEmailChange",
+    value: function handleEmailChange(email) {
+      this.setState({
+        email: email
+      });
+    }
+  }, {
+    key: "handlePhoneChange",
+    value: function handlePhoneChange(phone) {
+      this.setState({
+        phone: phone
+      });
+    }
+  }, {
+    key: "handleAddressChange",
+    value: function handleAddressChange(address) {
+      this.setState({
+        address: address
+      });
+    }
+  }, {
+    key: "handleStoreContact",
+    value: function handleStoreContact() {
       var _this2 = this;
+
+      window.axios.post('/contacts', {
+        first_name: this.state.firstName,
+        last_name: this.state.lastName,
+        phone: this.state.phone,
+        email: this.state.email,
+        address: this.state.address
+      }).then(function (response) {
+        _this2.getContact(); // reset formulaire
+
+
+        _this2.setState({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          address: '',
+          success: true
+        }); // Declanche le timer pour desactiver l'alert success dans 5s
+
+
+        setTimeout(function () {
+          _this2.setState({
+            success: false
+          });
+        }, 10000);
+        console.log('response : ');
+        console.log(response);
+      })["catch"](function (error) {
+        // var errors = this.state.errors
+        _this2.setState({
+          errors: error.response.data
+        });
+
+        console.log('error : ');
+        console.log(error.response.data);
+      });
+    }
+  }, {
+    key: "getContact",
+    value: function getContact() {
+      var _this3 = this;
 
       this.setState({
         loading: true
       });
       window.axios.get('/contacts').then(function (response) {
-        // console.log('RESPONSE :')
-        // console.log(response)
-        _this2.setState({
+        _this3.setState({
           contacts: response.data,
           loading: false
         });
       })["catch"](function (error) {
-        console.log('ERROR' + error);
+        console.log('ERROR', error.response);
 
-        _this2.setState({
+        _this3.setState({
           error: error,
           loading: false
         });
@@ -66008,25 +66102,33 @@ var App = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$state = this.state,
           contacts = _this$state.contacts,
-          loading = _this$state.loading;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          loading = _this$state.loading,
+          success = _this$state.success;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, success ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-success",
+        role: "alert"
+      }, "Le contact a \xE9t\xE9 ajout\xE9 avec succ\xE9s !") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-4"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-header"
-      }, "Dashboard"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert alert-success",
-        role: "alert"
-      }, "status"), "You are logged in!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contact_ContactForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        phone: this.state.phone,
+        email: this.state.email,
+        address: this.state.address,
+        onFirstNameChange: this.handleFirstNameChange,
+        onLastNameChange: this.handleLastNameChange,
+        onPhoneChange: this.handlePhoneChange,
+        onEmailChange: this.handleEmailChange,
+        onAddressChange: this.handleAddressChange,
+        onStoreContact: this.handleStoreContact,
+        success: this.state.success
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-8"
-      }, loading ? 'En chargement...' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contact_ContactList__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, loading ? 'En chargement...' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contact_ContactList__WEBPACK_IMPORTED_MODULE_3__["default"], {
         contacts: contacts
-      })));
+      }))));
     }
   }]);
 
@@ -66038,6 +66140,171 @@ var App = /*#__PURE__*/function (_Component) {
 if (document.getElementById('root')) {
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(App, null), document.getElementById('root'));
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/Contact/ContactForm.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/Contact/ContactForm.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var ContactForm = /*#__PURE__*/function (_Component) {
+  _inherits(ContactForm, _Component);
+
+  var _super = _createSuper(ContactForm);
+
+  function ContactForm(props) {
+    var _this;
+
+    _classCallCheck(this, ContactForm);
+
+    _this = _super.call(this, props);
+    _this.handleFirstNameChange = _this.handleFirstNameChange.bind(_assertThisInitialized(_this));
+    _this.handleLastNameChange = _this.handleLastNameChange.bind(_assertThisInitialized(_this));
+    _this.handlePhoneChange = _this.handlePhoneChange.bind(_assertThisInitialized(_this));
+    _this.handleEmailChange = _this.handleEmailChange.bind(_assertThisInitialized(_this));
+    _this.handleAddressChange = _this.handleAddressChange.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(ContactForm, [{
+    key: "handleFirstNameChange",
+    value: function handleFirstNameChange(e) {
+      this.props.onFirstNameChange(e.target.value);
+    }
+  }, {
+    key: "handleLastNameChange",
+    value: function handleLastNameChange(e) {
+      this.props.onLastNameChange(e.target.value);
+    }
+  }, {
+    key: "handlePhoneChange",
+    value: function handlePhoneChange(e) {
+      this.props.onPhoneChange(e.target.value);
+    }
+  }, {
+    key: "handleEmailChange",
+    value: function handleEmailChange(e) {
+      this.props.onEmailChange(e.target.value);
+    }
+  }, {
+    key: "handleAddressChange",
+    value: function handleAddressChange(e) {
+      this.props.onAddressChange(e.target.value);
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      this.props.onStoreContact();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          firstName = _this$props.firstName,
+          lastName = _this$props.lastName,
+          phone = _this$props.phone,
+          email = _this$props.email,
+          address = _this$props.address;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-header"
+      }, "Cr\xE9er un contact"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-body"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        className: "form",
+        onSubmit: this.handleSubmit
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "first_name",
+        value: firstName,
+        onChange: this.handleFirstNameChange,
+        className: "form-control",
+        placeholder: "Pr\xE9nom *"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "last_name",
+        value: lastName,
+        onChange: this.handleLastNameChange,
+        className: "form-control",
+        placeholder: "Nom *"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "number",
+        name: "phone",
+        value: phone,
+        onChange: this.handlePhoneChange,
+        className: "form-control",
+        placeholder: "T\xE9l\xE9phone *"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "email",
+        value: email,
+        onChange: this.handleEmailChange,
+        className: "form-control",
+        placeholder: "Email *"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "address",
+        value: address,
+        onChange: this.handleAddressChange,
+        className: "form-control",
+        placeholder: "Adresse"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "submit",
+        className: "btn btn-sm btn-block btn-primary"
+      }, "Enregistrer")))));
+    }
+  }]);
+
+  return ContactForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (ContactForm);
 
 /***/ }),
 
@@ -66056,14 +66323,16 @@ __webpack_require__.r(__webpack_exports__);
 
 function ContactItem(_ref) {
   var contact = _ref.contact;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, contact.last_name, " "), contact.first_name), contact.email), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, contact.phone)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, contact.last_name, " "), contact.first_name), contact.email), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, contact.phone)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    className: "text-sm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
-    className: "btn btn-warning btn-xs"
+    className: "btn btn-warning btn-sm"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-edit"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
-    className: "btn btn-danger btn-xs"
+    className: "btn btn-danger btn-sm"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash"
   }))));
@@ -66163,14 +66432,10 @@ var ContactList = /*#__PURE__*/function (_Component) {
     value: function render() {
       var rows = this.state.contacts;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-header"
-      }, "Liste des contact "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "bg-white p-3"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Liste des contact (", this.props.contacts.length, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Nom (email)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "T\xE9l\xE9phone"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, rows))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Nom (email)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "T\xE9l\xE9phone"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, rows)));
     }
   }]);
 
