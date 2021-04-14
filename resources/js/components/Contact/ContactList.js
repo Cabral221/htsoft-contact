@@ -9,6 +9,9 @@ class ContactList extends Component {
         this.state = {
             Contacts: this.props.contacts
         }
+
+        this.handleSubmitChange = this.handleSubmitChange.bind(this)
+        this.handleSubmitDelete = this.handleSubmitDelete.bind(this)
     }
     
     componentDidMount() {
@@ -17,12 +20,24 @@ class ContactList extends Component {
 
         Object.entries(contacts).forEach(entry => {
             const [key, contact] = entry;
-            rows.push(<ContactItem key={contact.id} contact={contact} />)
+            rows.push(<ContactItem 
+                    key={contact.id} 
+                    contact={contact} 
+                    submitChange={this.handleSubmitChange}
+                    submitDelete={this.handleSubmitDelete}
+                    errors={this.props.errors ? this.props.errors : null} />)
         })
 
         this.setState({
             contacts: rows
         })
+    }
+
+    handleSubmitChange(contact) {
+        this.props.submitChange(contact)
+    }
+    handleSubmitDelete() {
+        this.props.submitDelete()
     }
 
     render() {

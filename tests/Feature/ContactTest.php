@@ -116,6 +116,7 @@ class ContactTest extends TestCase
         $response = $this->json('PUT', "/contacts/{$contact->id}", 
                                 array_merge($contact->getAttributes(), [
                                     'first_name' => "FirstName edited",
+                                    'email' => $contact->email,
                                     'phone' => '778435052',
                                 ]));
 

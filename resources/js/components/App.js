@@ -20,6 +20,7 @@ class App extends Component {
             contacts : [],
             // Les status
             errors : [],
+            errorsEdited: [],
             loading: false
         }
 
@@ -28,6 +29,9 @@ class App extends Component {
         this.handleEmailChange = this.handleEmailChange.bind(this)
         this.handlePhoneChange = this.handlePhoneChange.bind(this)
         this.handleAddressChange = this.handleAddressChange.bind(this)
+
+        this.handleSubmitChange = this.handleSubmitChange.bind(this)
+        this.handleSubmitDelete = this.handleSubmitDelete.bind(this)
         this.handleStoreContact = this.handleStoreContact.bind(this)
     }
     
@@ -68,7 +72,7 @@ class App extends Component {
                 email: '',
                 phone: '',
                 address: '',
-                success: true,
+                success: 'Le contact a été ajouté avec succés !',
             })
 
             // Declanche le timer pour desactiver l'alert success dans 5s
@@ -76,15 +80,55 @@ class App extends Component {
                 this.setState({success: false})
             }, 10000);
 
-            console.log('response : ')
-            console.log(response)
+            // console.log('response : ')
+            // console.log(response)
         }).catch((error) => {
             // var errors = this.state.errors
             this.setState({errors: error.response.data.errors})
 
-            console.log('error : ')
-            console.log(error.response.data.errors)
+            // console.log('error : ')
+            // console.log(error.response.data.errors)
         })
+    }
+
+    handleSubmitChange(){
+        // reset data
+        this.getContact()
+
+        // reset formulaire
+        this.setState({
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: '',
+            success: 'Le contact a été modifié avec succés !',
+        })
+
+        // Declanche le timer pour desactiver l'alert success dans 5s
+        setTimeout(() => {
+            this.setState({success: false})
+        }, 10000);
+    }
+
+    handleSubmitDelete(){
+        // reset data
+        this.getContact()
+
+        // reset formulaire
+        this.setState({
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: '',
+            success: 'Le contact a été supprimé avec succés !',
+        })
+
+        // Declanche le timer pour desactiver l'alert success dans 5s
+        setTimeout(() => {
+            this.setState({success: false})
+        }, 10000);
     }
 
     getContact() {
@@ -97,7 +141,7 @@ class App extends Component {
                 loading: false
             })
         }).catch((error) => {
-            console.log('ERROR', error.response)
+            // console.log('ERROR', error.response)
             this.setState({
                 error: error,
                 loading: false
@@ -106,12 +150,12 @@ class App extends Component {
     }
 
     render() {
-        const  {contacts, loading, success} = this.state
+        const  {contacts, loading, success, errorsEdited} = this.state
         return (
             <div>
                 {
                     (success) 
-                    ?   <div className="alert alert-success" role="alert">Le contact a été ajouté avec succés !</div> 
+                    ?   <div className="alert alert-success" role="alert">{success}</div> 
                     : ''
                 }
                 <div className="row">
@@ -135,7 +179,13 @@ class App extends Component {
                             errors={this.state.errors} />                   
                     </div>
                     <div className="col-md-8">
-                        {(loading) ? 'En chargement...' : <ContactList contacts={contacts} /> }
+                        {(loading) 
+                        ? 'En chargement...' 
+                        : <ContactList 
+                                contacts={contacts} 
+                                submitChange={this.handleSubmitChange} 
+                                submitDelete={this.handleSubmitDelete} 
+                                errors={errorsEdited} /> }
                     </div>
                 </div>
             </div>

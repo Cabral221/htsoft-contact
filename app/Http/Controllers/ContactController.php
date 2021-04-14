@@ -59,7 +59,7 @@ class ContactController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:2',
             'last_name' => 'required|string|min:2',
-            'email' => 'required|string|email|unique:contacts,email,' . $auth->id,
+            'email' => 'required|string|email|unique:contacts,email',
             'phone' => 'required|string',
             'address' => 'string',
         ]);
@@ -102,18 +102,18 @@ class ContactController extends Controller
     {
         /** @var User */
         $auth = auth()->user();
-
+        // dd($request->all());
         $request->validate([
             'first_name' => 'required|string|min:2',
             'last_name' => 'required|string|min:2',
-            'email' => 'required|string|email|unique:contacts,email' . $auth->id,
+            'email' => 'required|string|email|unique:contacts,email,'.$id,
             'phone' => 'required|string',
             'address' => 'string',
         ]);
         
         $contact = Contact::findOrFail($id);
         $contact->update($request->all());
-        return response()->json($contact->getAttributes(), 200);
+        return response()->json($contact->refresh()->getAttributes(), 200);
     }
 
     /**
