@@ -35,8 +35,8 @@ class ContactForm extends Component {
     }
 
     render() {
-        const {firstName, lastName, phone, email, address} = this.props
-
+        const {firstName, lastName, phone, email, address, errors} = this.props
+        
         return (
             <div className="card">
                 <div className="card-header">Créer un contact</div>
@@ -46,31 +46,41 @@ class ContactForm extends Component {
                             <input type="text" name="first_name" 
                                 value={firstName} 
                                 onChange={this.handleFirstNameChange}
-                                className="form-control" placeholder="Prénom *" />
+                                className={(errors && errors.first_name) ? 'form-control is-invalid' : 'form-control'} 
+                                placeholder="Prénom *" />
+                                {(errors && errors.first_name) ? <div className="invalid-feedback">{errors.first_name}</div> : ''}
                         </div>
                         <div className="form-group">
                             <input type="text" name="last_name" 
                                 value={lastName} 
                                 onChange={this.handleLastNameChange}
-                                className="form-control" placeholder="Nom *"/>
+                                className={(errors && errors.last_name) ? 'form-control is-invalid' : 'form-control'} 
+                                placeholder="Nom *"/>
+                                {(errors && errors.last_name) ? <div className="invalid-feedback">{errors.last_name}</div> : ''}
                         </div>
                         <div className="form-group">
                             <input type="number" name="phone" 
                                 value={phone} 
-                                onChange={this.handlePhoneChange}
-                                className="form-control" placeholder="Téléphone *"/>
+                                onChange={this.handlePhoneChange} 
+                                className={(errors && errors.phone) ? 'form-control is-invalid' : 'form-control'} 
+                                placeholder="Téléphone *"/>
+                                {(errors && errors.phone) ? <div className="invalid-feedback">{errors.phone}</div> : ''}
                         </div>
                         <div className="form-group">
                             <input type="text" name="email" 
                                 value={email} 
                                 onChange={this.handleEmailChange}
-                                className="form-control" placeholder="Email *"/>
+                                className={(errors && errors.email) ? 'form-control is-invalid' : 'form-control'} 
+                                placeholder="Email *"/>
+                                {(errors && errors.email) ? <div className="invalid-feedback">{errors.email}</div> : ''}
                         </div>
                         <div className="form-group">
                             <input type="text" name="address" 
                                 value={address} 
                                 onChange={this.handleAddressChange}
-                                className="form-control" placeholder="Adresse"/>
+                                className={(errors && errors.address) ? 'form-control is-invalid' : 'form-control'} 
+                                placeholder="Adresse"/>
+                                {(errors && errors.address) ? <div className="invalid-feedback">{errors.address}</div> : ''}
                         </div>
                         <div className="form-group" >
                             <button type="submit" className="btn btn-sm btn-block btn-primary" >Enregistrer</button>

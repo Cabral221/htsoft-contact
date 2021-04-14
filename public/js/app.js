@@ -65974,13 +65974,16 @@ var App = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
+      // données pour le formulaires
       firstName: '',
       lastName: '',
       email: '',
       phone: '',
       address: '',
       success: false,
+      // Les contacts
       contacts: [],
+      // Les status
       errors: [],
       loading: false
     };
@@ -66068,11 +66071,11 @@ var App = /*#__PURE__*/function (_Component) {
       })["catch"](function (error) {
         // var errors = this.state.errors
         _this2.setState({
-          errors: error.response.data
+          errors: error.response.data.errors
         });
 
         console.log('error : ');
-        console.log(error.response.data);
+        console.log(error.response.data.errors);
       });
     }
   }, {
@@ -66122,8 +66125,9 @@ var App = /*#__PURE__*/function (_Component) {
         onPhoneChange: this.handlePhoneChange,
         onEmailChange: this.handleEmailChange,
         onAddressChange: this.handleAddressChange,
-        onStoreContact: this.handleStoreContact,
-        success: this.state.success
+        onStoreContact: this.handleStoreContact // success={this.state.success}
+        ,
+        errors: this.state.errors
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-8"
       }, loading ? 'En chargement...' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contact_ContactList__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -66237,7 +66241,8 @@ var ContactForm = /*#__PURE__*/function (_Component) {
           lastName = _this$props.lastName,
           phone = _this$props.phone,
           email = _this$props.email,
-          address = _this$props.address;
+          address = _this$props.address,
+          errors = _this$props.errors;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -66254,45 +66259,55 @@ var ContactForm = /*#__PURE__*/function (_Component) {
         name: "first_name",
         value: firstName,
         onChange: this.handleFirstNameChange,
-        className: "form-control",
+        className: errors && errors.first_name ? 'form-control is-invalid' : 'form-control',
         placeholder: "Pr\xE9nom *"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), errors && errors.first_name ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, errors.first_name) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "last_name",
         value: lastName,
         onChange: this.handleLastNameChange,
-        className: "form-control",
+        className: errors && errors.last_name ? 'form-control is-invalid' : 'form-control',
         placeholder: "Nom *"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), errors && errors.last_name ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, errors.last_name) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "number",
         name: "phone",
         value: phone,
         onChange: this.handlePhoneChange,
-        className: "form-control",
+        className: errors && errors.phone ? 'form-control is-invalid' : 'form-control',
         placeholder: "T\xE9l\xE9phone *"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), errors && errors.phone ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, errors.phone) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "email",
         value: email,
         onChange: this.handleEmailChange,
-        className: "form-control",
+        className: errors && errors.email ? 'form-control is-invalid' : 'form-control',
         placeholder: "Email *"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), errors && errors.email ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, errors.email) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "address",
         value: address,
         onChange: this.handleAddressChange,
-        className: "form-control",
+        className: errors && errors.address ? 'form-control is-invalid' : 'form-control',
         placeholder: "Adresse"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), errors && errors.address ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, errors.address) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",

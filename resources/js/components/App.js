@@ -9,14 +9,16 @@ class App extends Component {
         super(props)
 
         this.state = {
+            // données pour le formulaires
             firstName: '',
             lastName: '',
             email: '',
             phone: '',
             address: '',
             success: false,
-
+            // Les contacts
             contacts : [],
+            // Les status
             errors : [],
             loading: false
         }
@@ -78,10 +80,10 @@ class App extends Component {
             console.log(response)
         }).catch((error) => {
             // var errors = this.state.errors
-            this.setState({errors: error.response.data})
+            this.setState({errors: error.response.data.errors})
 
             console.log('error : ')
-            console.log(error.response.data)
+            console.log(error.response.data.errors)
         })
     }
 
@@ -129,7 +131,8 @@ class App extends Component {
 
                             onStoreContact={this.handleStoreContact} 
                             
-                            success={this.state.success}/>                   
+                            // success={this.state.success}
+                            errors={this.state.errors} />                   
                     </div>
                     <div className="col-md-8">
                         {(loading) ? 'En chargement...' : <ContactList contacts={contacts} /> }
